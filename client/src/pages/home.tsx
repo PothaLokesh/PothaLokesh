@@ -27,7 +27,7 @@ import {
 } from "react-icons/si";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertContactSchema, type InsertContact } from "@shared/schema";
+
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -44,39 +44,9 @@ export default function Home() {
     resume: "resume.pdf",
   };
 
-  const form = useForm<InsertContact>({
-    resolver: zodResolver(insertContactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      message: "",
-    },
-  });
+  
 
-  const contactMutation = useMutation({
-    mutationFn: async (data: InsertContact) => {
-      return await apiRequest("POST", "/api/contact", data);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message! I'll get back to you soon.",
-      });
-      form.reset();
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const onSubmit = async (data: InsertContact) => {
-    contactMutation.mutate(data);
-  };
-
+  
   const toggleLike = (projectId: string) => {
     setLikedProjects(prev => {
       const newSet = new Set(prev);
@@ -572,74 +542,7 @@ export default function Home() {
                 <p className="font-medium text-purple-700 dark:text-purple-300">Nandyala, Andhra Pradesh, India</p>
               </div>
             </div>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your name"
-                            className="h-12 rounded-lg"
-                            data-testid="input-name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter email address"
-                            type="email"
-                            className="h-12 rounded-lg"
-                            data-testid="input-email"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="message"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Enter your message"
-                          rows={6}
-                          className="resize-none rounded-lg"
-                          data-testid="input-message"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button 
-                  type="submit" 
-                  size="lg" 
-                  className="w-full md:w-auto rounded-full px-12 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  disabled={contactMutation.isPending}
-                  data-testid="button-submit-contact"
-                >
-                  {contactMutation.isPending ? "Sending..." : "Send email"}
-                </Button>
-              </form>
-            </Form>
+           
           </div>
         </div>
       </section>
