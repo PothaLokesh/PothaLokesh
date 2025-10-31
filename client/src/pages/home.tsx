@@ -531,7 +531,7 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-sm">
               <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800">
                 <p className="text-blue-600 dark:text-blue-400 font-medium">Email</p>
-                <a href="mailto:lokesha941222@gmail.com" className="font-medium text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">lokesha941222@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&to=lokesh941222@gmail.com" className="font-medium text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">lokesh941222@gmail.com</a>
               </div>
               <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800">
                 <p className="text-green-600 dark:text-green-400 font-medium">Phone</p>
