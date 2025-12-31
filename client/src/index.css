@@ -4,15 +4,16 @@
 
 /* LIGHT MODE */
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(0, 0, 0, .10);
+  --badge-outline: rgba(0, 0, 0, .05);
 
   /* Automatic computation of border around primary / danger buttons */
-  --opaque-button-border-intensity: -8; /* In terms of percentages */
+  --opaque-button-border-intensity: -8;
+  /* In terms of percentages */
 
   /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(0, 0, 0, .03);
+  --elevate-2: rgba(0, 0, 0, .08);
 
   --background: 0 0% 98%;
 
@@ -32,23 +33,22 @@
 
   --sidebar-border: 0 0% 88%;
 
-  --sidebar-primary: 328 100% 54%;
+  /* LIGHT MODE */
+  --sidebar-primary: 221.2 83.2% 53.3%;
+  --sidebar-ring: 221.2 83.2% 53.3%;
+  --primary: 221.2 83.2% 53.3%;
+  --ring: 221.2 83.2% 53.3%;
+  --chart-1: 221.2 83.2% 53.3%;
 
-  --sidebar-primary-foreground: 0 0% 98%;
-
-  --sidebar-accent: 328 20% 94%;
-
-  --sidebar-accent-foreground: 328 100% 20%;
-
-  --sidebar-ring: 328 100% 54%;
-
-  --popover: 0 0% 99%;
-
-  --popover-foreground: 0 0% 10%;
-
-  --popover-border: 0 0% 90%;
-
-  --primary: 328 100% 54%;
+  /* DARK MODE overrides */
+  /* Note: Assuming these variables are inside .dark selector block in the file, 
+     but I need to target the specific lines. 
+     The ViewFile output shows --primary is defined twice, once in :root and once in .dark.
+     I will replace the specific blocks. This tool call replaces the first occurrence or specific lines. 
+     The previous file view shows lines 35, 43, 51, 72, 73 for root 
+     and 153, 161, 169, 190, 191 for dark.
+     I will use multi_replace instead to be safe and cover both.
+  */
 
   --primary-foreground: 0 0% 98%;
 
@@ -123,14 +123,15 @@
 }
 
 .dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --button-outline: rgba(255, 255, 255, .10);
+  --badge-outline: rgba(255, 255, 255, .05);
 
-  --opaque-button-border-intensity: 9;  /* In terms of percentages */
+  --opaque-button-border-intensity: 9;
+  /* In terms of percentages */
 
   /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
+  --elevate-1: rgba(255, 255, 255, .04);
+  --elevate-2: rgba(255, 255, 255, .09);
 
   --background: 0 0% 8%;
 
@@ -150,45 +151,45 @@
 
   --sidebar-border: 0 0% 20%;
 
-  --sidebar-primary: 328 100% 54%;
+  --sidebar-primary: 221.2 83.2% 53.3%;
 
-  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-primary-foreground: 210 40% 98%;
 
-  --sidebar-accent: 328 20% 16%;
+  --sidebar-accent: 210 40% 96.1%;
 
-  --sidebar-accent-foreground: 328 100% 75%;
+  --sidebar-accent-foreground: 222.2 47.4% 11.2%;
 
-  --sidebar-ring: 328 100% 54%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 
-  --popover: 0 0% 11%;
+  --popover: 0 0% 100%;
 
-  --popover-foreground: 0 0% 95%;
+  --popover-foreground: 222.2 84% 4.9%;
 
-  --popover-border: 0 0% 19%;
+  --popover-border: 214.3 31.8% 91.4%;
 
-  --primary: 328 100% 54%;
+  --primary: 221.2 83.2% 53.3%;
 
-  --primary-foreground: 0 0% 98%;
+  --primary-foreground: 210 40% 98%;
 
-  --secondary: 0 0% 16%;
+  --secondary: 210 40% 96.1%;
 
-  --secondary-foreground: 0 0% 92%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
 
-  --muted: 0 5% 14%;
+  --muted: 210 40% 96.1%;
 
-  --muted-foreground: 0 0% 65%;
+  --muted-foreground: 215.4 16.3% 46.9%;
 
-  --accent: 328 15% 15%;
+  --accent: 210 40% 96.1%;
 
-  --accent-foreground: 328 100% 80%;
+  --accent-foreground: 222.2 47.4% 11.2%;
 
-  --destructive: 0 84% 48%;
+  --destructive: 0 84.2% 60.2%;
 
-  --destructive-foreground: 0 0% 98%;
+  --destructive-foreground: 210 40% 98%;
 
-  --input: 0 0% 35%;
-  --ring: 328 100% 54%;
-  --chart-1: 328 100% 65%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --chart-1: 221.2 83.2% 53.3%;
   --chart-2: 280 85% 70%;
   --chart-3: 200 90% 60%;
   --chart-4: 45 95% 65%;
@@ -210,8 +211,13 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 

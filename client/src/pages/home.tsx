@@ -1,52 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Download, 
-  Briefcase, 
-  Users, 
-  Trophy, 
-  Smartphone, 
-  Palette, 
+import {
+  Download,
+  Briefcase,
+  Users,
+  Trophy,
+  Smartphone,
+  Palette,
   Layout,
   Heart,
   Menu,
-  X
+  X,
+  ExternalLink,
+  ChevronDown
 } from "lucide-react";
-import { 
-  SiTelegram, 
-  SiWhatsapp, 
-  SiFigma, 
-  SiDribbble, 
+import {
+  SiTelegram,
+  SiWhatsapp,
+  SiFigma,
+  SiDribbble,
   SiBehance,
   SiInstagram,
   SiLinkedin,
   SiGithub
 } from "react-icons/si";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [likedProjects, setLikedProjects] = useState<Set<string>>(new Set());
-  const { toast } = useToast();
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 300], [0, 1]);
+  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
+
   const LINKS = {
     instagram: "#",
     linkedin: "https://www.linkedin.com/in/lokesh-potha-7b0942253/",
     github: "https://github.com/PothaLokesh",
-    resume: "resume.pdf",
+    resume: "Lokesh_Potha_Resume.pdf",
   };
 
-  
-
-  
   const toggleLike = (projectId: string) => {
     setLikedProjects(prev => {
       const newSet = new Set(prev);
@@ -70,527 +70,524 @@ export default function Home() {
   const services = [
     {
       icon: Layout,
-      title: "Full‑stack web apps",
-      description:
-        "Build scalable apps with Next.js/React, Node.js, PostgreSQL/MongoDB, Tailwind CSS",
+      title: "Full‑Stack Architecture",
+      description: "Scalable, high-performance web applications built with Next.js, React, and robust backend systems.",
+      color: "from-blue-500 to-cyan-500",
     },
     {
       icon: Smartphone,
-      title: "Realtime & APIs",
-      description:
-        "Socket.IO realtime chat, secure auth, REST APIs with Express and Clerk",
+      title: "Realtime Systems",
+      description: "Interactive experiences with Socket.IO, ensuring instant data updates and seamless communication.",
+      color: "from-indigo-500 to-violet-500",
     },
     {
       icon: Palette,
-      title: "UI engineering",
-      description:
-        "Responsive, accessible interfaces with modern component systems and animations",
+      title: "Premium UI/UX",
+      description: "Pixel-perfect, accessible interfaces featuring glassmorphism, fluid animations, and modern aesthetics.",
+      color: "from-cyan-500 to-blue-500",
     },
     {
       icon: Briefcase,
-      title: "AI/ML integration",
-      description:
-        "Integrate AI features and data‑driven insights using Python, scikit‑learn, TensorFlow",
+      title: "AI Integration",
+      description: "Leveraging Python and ML libraries to build intelligent features that solve real-world problems.",
+      color: "from-green-500 to-emerald-500",
     },
   ];
 
   const projects = [
     {
       id: "1",
-      title: "AI‑Powered Online Learning Platform",
-      image:
-        "/a futuristic digital.png",
+      title: "AI‑Powered Learning Platform",
+      description: "A comprehensive e-learning solution with AI course generation and student tracking.",
+      tags: ["Next.js", "AI", "PostgreSQL"],
+      image: "/a futuristic digital.png",
       live: "https://online-learning-platform-git-main-lokeshs-projects-a2d34815.vercel.app/",
     },
     {
       id: "2",
       title: "Realtime Chat Application",
-      image:"/QuickApp.png",
+      description: "Secure, instant messaging platform with group support and media sharing capabilities.",
+      tags: ["React", "Socket.IO", "Node.js"],
+      image: "/QuickApp.png",
       live: "https://chat-app-front-zeta.vercel.app/",
+    },
+    {
+      id: "3",
+      title: "MarketPulse Dashboard",
+      description: "A real-time financial dashboard for tracking stock prices, interactive charts, and automated market news.",
+      tags: ["Next.js", "TypeScript", "Cloudflare Workers", "MongoDB"],
+      image: "/marketpulse.png",
+      live: "https://marketpulse-dashboard-front.vercel.app/",
     }
   ];
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <h1 className="text-2xl font-bold text-foreground">POTHA LOKESH</h1>
-            
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-white/10 supports-[backdrop-filter]:bg-background/60"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <motion.h1
+              whileHover={{ scale: 1.05 }}
+              className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text text-transparent cursor-pointer"
+            >
+              POTHA LOKESH
+            </motion.h1>
+
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8 flex-wrap">
-              <button 
-                onClick={() => scrollToSection('home')} 
-                className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors"
-                data-testid="nav-home"
+            <div className="hidden md:flex items-center gap-1">
+              {['Home', 'About', 'Services', 'Work', 'Contact'].map((item) => (
+                <Button
+                  key={item}
+                  variant="ghost"
+                  onClick={() => scrollToSection(item.toLowerCase())}
+                  className="text-sm font-medium hover:bg-primary/10 hover:text-primary transition-all duration-300 rounded-full px-5"
+                >
+                  {item}
+                </Button>
+              ))}
+              <Button
+                className="ml-4 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                asChild
               >
-                Home
-              </button>
-              <button 
-                onClick={() => scrollToSection('about')} 
-                className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors"
-                data-testid="nav-about"
-              >
-                About me
-              </button>
-              <button 
-                onClick={() => scrollToSection('services')} 
-                className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors"
-                data-testid="nav-services"
-              >
-                Services
-              </button>
-              <button 
-                onClick={() => scrollToSection('work')} 
-                className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors"
-                data-testid="nav-work"
-              >
-                My work
-              </button>
-              <button 
-                onClick={() => scrollToSection('contact')} 
-                className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors"
-                data-testid="nav-contact"
-              >
-                Contact
-              </button>
+                <a href={`/${LINKS.resume}`} download className="flex items-center gap-2">
+                  <Download className="w-4 h-4" /> CV
+                </a>
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-md hover-elevate"
-              data-testid="button-mobile-menu"
+              className="md:hidden p-2 text-foreground/80 hover:text-primary transition-colors"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden mt-4 py-4 border-t border-border">
-              <div className="flex flex-col gap-2">
-                <button 
-                  onClick={() => scrollToSection('home')} 
-                  className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors text-left"
-                >
-                  Home
-                </button>
-                <button 
-                  onClick={() => scrollToSection('about')} 
-                  className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors text-left"
-                >
-                  About me
-                </button>
-                <button 
-                  onClick={() => scrollToSection('services')} 
-                  className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors text-left"
-                >
-                  Services
-                </button>
-                <button 
-                  onClick={() => scrollToSection('work')} 
-                  className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors text-left"
-                >
-                  My work
-                </button>
-                <button 
-                  onClick={() => scrollToSection('contact')} 
-                  className="text-sm font-medium text-foreground hover-elevate px-3 py-2 rounded-md transition-colors text-left"
-                >
-                  Contact
-                </button>
-              </div>
-            </div>
-          )}
         </div>
-      </nav>
+
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden overflow-hidden bg-background/95 border-b border-border backdrop-blur-xl"
+            >
+              <div className="flex flex-col p-6 gap-4">
+                {['Home', 'About', 'Services', 'Work', 'Contact'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(item.toLowerCase())}
+                    className="text-lg font-medium text-left py-2 hover:text-primary transition-colors border-b border-border/50 last:border-0"
+                  >
+                    {item}
+                  </button>
+                ))}
+                <Button
+                  className="w-full mt-4 rounded-full bg-primary text-white"
+                  asChild
+                >
+                  <a href={`/${LINKS.resume}`} download>
+                    Download CV
+                  </a>
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
 
       {/* Hero Section */}
-      <section id="home" className="py-20 md:py-32 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16 flex-wrap">
-            {/* Profile Image */}
-            <div className="flex-shrink-0">
-              <div className="relative w-48 h-48 md:w-64 md:h-64">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-pulse"></div>
-                <div className="relative w-full h-full rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl">
-                  <img 
-                    src="/photo1.jpg"
-                    alt="Potha Lokesh"
-                    className="w-full h-full object-cover"
-                    data-testid="img-profile-hero"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Hero Content */}
-            <div className="flex-1 text-center md:text-left">
-              <p className="text-sm font-medium text-muted-foreground mb-3" data-testid="text-hero-subtitle">
-                Hi, I am Potha Lokesh
-              </p>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent" data-testid="text-hero-title">
-                Full‑Stack Developer • AI Integration<br />based in Nandyala, India
-              </h2>
-              <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl leading-relaxed" data-testid="text-hero-description">
-                Aspiring software engineer focused on scalable web apps, AI integration, and data‑driven solutions. Passionate about building user‑centric products at the intersection of cloud, AI, and modern UX.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 flex-wrap justify-center md:justify-start">
-                <Button size="lg" className="rounded-full px-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300" data-testid="button-download-cv" asChild>
-                 
-                <a href="/resume.pdf" download>Download CV</a>
-                 
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="rounded-full px-8"
-                  onClick={() => scrollToSection('work')}
-                  data-testid="button-my-work"
-                >
-                  My work
-                </Button>
-              </div>
-            </div>
-          </div>
+      <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        {/* Abstract Background Blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              rotate: [0, 90, 0],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-[20%] -right-[10%] w-[800px] h-[800px] rounded-full bg-purple-500/10 blur-[100px]"
+          />
+          <motion.div
+            animate={{
+              scale: [1.2, 1, 1.2],
+              x: [0, 50, 0],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-blue-500/10 blur-[100px]"
+          />
         </div>
-      </section>
 
-     
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10 w-full">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="text-center lg:text-left"
+          >
+            <motion.div variants={itemVariants} className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-semibold text-sm mb-6 border border-primary/20">
+              👋 Welcome to my portfolio
+            </motion.div>
 
-      
+            <motion.h2 variants={itemVariants} className="text-5xl lg:text-7xl font-bold mb-6 tracking-tight leading-[1.1]">
+              Hi, I'm <br />
+              <span className="bg-gradient-to-r from-primary via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Potha Lokesh
+              </span>
+            </motion.h2>
 
-      
+            <motion.p variants={itemVariants} className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              Full‑Stack Developer & AI Enthusiast based in India. I craft scalable web applications and intelligent systems that solve real problems.
+            </motion.p>
 
-      {/* About Me Section */}
-      <section id="about" className="py-20 bg-muted/30">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-muted-foreground text-center mb-2">Introduction</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-16">About me</h3>
-          
-          <div className="flex flex-col lg:flex-row gap-12 items-center flex-wrap">
-            {/* Profile Image */}
-            <div className="flex-shrink-0">
-              <div className="w-72 h-96 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden border border-border shadow-lg">
-                <img 
-                  src="/photo2.jpg"
-                  alt="Potha Lokesh"
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
+              <Button size="lg" className="rounded-full h-12 px-8 text-base bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg shadow-primary/25" onClick={() => scrollToSection('work')}>
+                View My Work
+              </Button>
+              <Button size="lg" variant="outline" className="rounded-full h-12 px-8 text-base border-2 hover:bg-secondary/50" onClick={() => scrollToSection('contact')}>
+                Contact Me
+              </Button>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="mt-12 flex items-center justify-center lg:justify-start gap-6 text-muted-foreground">
+              <a href={LINKS.github} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors transform hover:scale-110 duration-200">
+                <SiGithub size={24} />
+              </a>
+              <a href={LINKS.linkedin} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors transform hover:scale-110 duration-200">
+                <SiLinkedin size={24} />
+              </a>
+              <a href={`mailto:lokesh941222@gmail.com`} className="hover:text-primary transition-colors transform hover:scale-110 duration-200">
+                <ExternalLink size={24} />
+              </a>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            style={{ y: heroY }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative hidden lg:block"
+          >
+            <div className="relative w-[300px] h-[360px] mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary to-purple-600 rounded-[2rem] rotate-6 opacity-20 blur-2xl"></div>
+              <div className="absolute inset-0 bg-secondary rounded-[2rem] -rotate-3 border border-border shadow-2xl overflow-hidden">
+                <img
+                  src="/photo1.jpg"
+                  alt="Profile"
                   className="w-full h-full object-cover"
-                  data-testid="img-profile-about"
                 />
               </div>
-            </div>
 
-            {/* About Content */}
-            <div className="flex-1">
-              <p className="text-muted-foreground leading-relaxed mb-6" data-testid="text-about-description">
-                I am a full‑stack developer skilled in Next.js, React, Node.js, and databases
-                like PostgreSQL and MongoDB. I enjoy crafting clean UIs with Tailwind CSS and
-                bringing intelligent features to life using Python and machine learning tools.
-                Recently, I built an AI‑powered e‑learning platform and a realtime chat app.
+              {/* Floating Cards */}
+              <motion.div
+                animate={{ y: [0, -20, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -left-12 top-20 bg-background/90 backdrop-blur-xl p-4 rounded-xl border border-white/20 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600">
+                    <SiGithub className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Contributions</p>
+                    <p className="font-bold">Active Dev</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, 20, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -right-8 bottom-32 bg-background/90 backdrop-blur-xl p-4 rounded-xl border border-white/20 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600">
+                    <Trophy className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">DSA</p>
+                    <p className="font-bold">300+ Solved</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted-foreground"
+        >
+          <ChevronDown className="w-6 h-6" />
+        </motion.div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-32 bg-secondary/30 relative">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">About Me</h2>
+            <div className="w-20 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              I'm a passionate developer who bridges the gap between complex backend logic and user-friendly frontend designs.
+            </p>
+          </motion.div>
+
+          <div className="flex flex-col gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-2xl font-bold mb-6">Who I Am</h3>
+              <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
+                I specialize in <strong>Full-Stack Development</strong> with a strong focus on <strong>AI-powered applications</strong>. With a solid foundation in data structures and algorithmic problem solving (300+ problems solved across platforms), I build efficient, scalable, and reliable software systems.
               </p>
-              
-              {/* Stats */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-                <Card className="border-border" data-testid="card-stat-experience">
-                  <CardContent className="p-6">
-                    <Briefcase className="w-8 h-8 text-primary mb-3" />
-                    <p className="text-3xl font-bold mb-1">2</p>
-                    <p className="text-sm text-muted-foreground">Major projects</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-border" data-testid="card-stat-clients">
-                  <CardContent className="p-6">
-                    <Users className="w-8 h-8 text-primary mb-3" />
-                    <p className="text-3xl font-bold mb-1">300+</p>
-                    <p className="text-sm text-muted-foreground">LeetCode problems</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-border" data-testid="card-stat-projects">
-                  <CardContent className="p-6">
-                    <Trophy className="w-8 h-8 text-primary mb-3" />
-                    <p className="text-3xl font-bold mb-1">5+</p>
-                    <p className="text-sm text-muted-foreground">Certificates & achievements</p>
-                  </CardContent>
-                </Card>
-              </div>
+              <p className="text-muted-foreground leading-relaxed mb-8 text-lg">
+                My recent work includes developing an AI-powered online learning platform using Retrieval-Augmented Generation (RAG) and a real-time chat application with AI-based event detection, leveraging modern technologies such as Next.js, TypeScript, PostgreSQL, MongoDB, and cloud-native tools.
+              </p>
 
-              {/* Social Links */}
-              <div className="flex gap-3 flex-wrap">
-                <Button size="icon" variant="outline" className="rounded-full" data-testid="button-social-instagram" asChild>
-                  <a href={LINKS.instagram} target="_blank" rel="noreferrer">
-                    <SiInstagram className="w-5 h-5" />
-                  </a>
-                </Button>
-                <Button size="icon" variant="outline" className="rounded-full" data-testid="button-social-linkedin" asChild>
-                  <a href={LINKS.linkedin} target="_blank" rel="noreferrer">
-                    <SiLinkedin className="w-5 h-5" />
-                  </a>
-                </Button>
-                <Button size="icon" variant="outline" className="rounded-full" data-testid="button-social-github" asChild>
-                  <a href={LINKS.github} target="_blank" rel="noreferrer">
-                    <SiGithub className="w-5 h-5" />
-                  </a>
-                </Button>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="p-4 bg-background rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-shadow">
+                  <h4 className="font-bold text-3xl text-primary mb-1">6+</h4>
+                  <p className="text-sm text-muted-foreground">Major Projects</p>
+                </div>
+                <div className="p-4 bg-background rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-shadow">
+                  <h4 className="font-bold text-3xl text-primary mb-1">2+</h4>
+                  <p className="text-sm text-muted-foreground">Years Coding</p>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950/20 dark:via-purple-950/20 dark:to-pink-950/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-muted-foreground text-center mb-2">What I offer</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">My services</h3>
-          <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
-            I build beautiful digital products with unique ideas use Figma, Framer, Microsoft, Visual and Apple.
-          </p>
+      <section id="services" className="py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">What I Do</h2>
+            <div className="w-20 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
-              <Card 
-                key={index} 
-                className={`group hover-elevate transition-all duration-500 hover:scale-105 border-border shadow-lg hover:shadow-2xl ${
-                  index === 0 ? 'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20' :
-                  index === 1 ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20' :
-                  index === 2 ? 'bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20' :
-                  'bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20'
-                }`}
-                data-testid={`card-service-${index}`}
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
               >
-                <CardContent className="p-6">
-                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 ${
-                    index === 0 ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
-                    index === 1 ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
-                    index === 2 ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
-                    'bg-gradient-to-r from-orange-500 to-red-500'
-                  }`}>
-                    <service.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h4 className="text-xl font-semibold mb-3">{service.title}</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {service.description}
-                  </p>
-                </CardContent>
-              </Card>
+                <Card className="h-full border-border/50 bg-secondary/20 backdrop-blur-sm hover:-translate-y-2 transition-transform duration-300">
+                  <CardContent className="p-8">
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6 shadow-lg`}>
+                      <service.icon className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      {service.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Portfolio Section */}
-      <section id="work" className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-orange-950/20 dark:via-red-950/20 dark:to-pink-950/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-muted-foreground text-center mb-2">Latest projects</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">My latest work</h3>
-          <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
-            My portfolio is a journey through innovation. Explore a curated selection of projects showcasing my expertise in creating engaging digital experiences.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {projects.map((project, index) => (
-              <Card 
-                key={project.id} 
-                className={`group overflow-hidden border-border hover-elevate transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-2xl ${
-                  index % 2 === 0 
-                    ? 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20' 
-                    : 'bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/20 dark:to-teal-950/20'
-                }`}
-                data-testid={`card-project-${project.id}`}
-              >
-                <CardContent className="p-0">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <button
-                      onClick={() => toggleLike(project.id)}
-                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover-elevate transition-all duration-300 hover:bg-red-500 hover:text-white"
-                      data-testid={`button-like-${project.id}`}
-                    >
-                      <Heart 
-                        className={`w-5 h-5 transition-colors ${
-                          likedProjects.has(project.id) 
-                            ? 'fill-red-500 text-red-500' 
-                            : 'text-gray-600'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  <div className="p-6 flex items-center justify-between gap-4">
-                    <h4 className="text-xl font-semibold" data-testid={`text-project-title-${project.id}`}>
-                      {project.title}
-                    </h4>
-                    {project.live && (
-                      <Button size="sm" variant="outline" className="rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300" asChild>
-                        <a href={project.live} target="_blank" rel="noreferrer">Live Demo</a>
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+      {/* Skills Marquee */}
+      <section id="skills" className="py-20 bg-primary/5 overflow-hidden">
+        <div className="mb-12 text-center">
+          <h2 className="text-2xl font-bold text-muted-foreground">Tech Stack & Tools</h2>
+        </div>
+        <div className="flex overflow-hidden relative after:absolute after:inset-y-0 after:left-0 after:w-32 after:bg-gradient-to-r after:from-primary/5 after:to-transparent before:absolute before:inset-y-0 before:right-0 before:w-32 before:bg-gradient-to-l before:from-primary/5 before:to-transparent before:z-10 after:z-10">
+          <motion.div
+            className="flex gap-12 items-center flex-nowrap pl-12"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ ease: "linear", duration: 25, repeat: Infinity }}
+          >
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex gap-12 items-center text-4xl font-bold text-muted-foreground/30 whitespace-nowrap">
+                <span>React</span>
+                <span>Next.js</span>
+                <span>TypeScript</span>
+                <span>Node.js</span>
+                <span>PostgreSQL</span>
+                <span>Tailwind</span>
+                <span>Python</span>
+                <span>Framer Motion</span>
+                <span>Git</span>
+                <span>Figma</span>
+                <span>MongoDB</span>
+                <span>Socket.IO</span>
+              </div>
             ))}
-          </div>
+          </motion.div>
+        </div>
+      </section>
 
-          <div className="text-center">
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="rounded-full px-8"
-              data-testid="button-show-more"
-            >
-              Show more
+      {/* Projects Section */}
+      <section id="work" className="py-32">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4"
+          >
+            <div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">Featured Work</h2>
+              <div className="w-20 h-1.5 bg-primary rounded-full"></div>
+            </div>
+            <Button variant="outline" className="rounded-full" onClick={() => window.open(LINKS.github, '_blank')}>
+              View GitHub Profile
             </Button>
-          </div>
-        </div>
-      </section>
-      {/* Skills Section */}
-      <section id="skills" className="py-20 bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-green-950/20 dark:via-blue-950/20 dark:to-purple-950/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-muted-foreground text-center mb-2">Core strengths</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Skills</h3>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="border-border bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950/20 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
-                <h4 className="text-xl font-semibold mb-4 text-blue-600 dark:text-blue-400">Programming & Web</h4>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "Java","Python","C","HTML5","CSS3","JavaScript","TypeScript","React","Next.js","Tailwind CSS"
-                  ].map((s, index) => (
-                    <span key={s} className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
-                      index % 3 === 0 ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' :
-                      index % 3 === 1 ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' :
-                      'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
-                    }`}>{s}</span>
-                  ))}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+                className="group h-full"
+              >
+                <div className="rounded-2xl overflow-hidden border border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
+                  <div className="relative aspect-video overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                      <Button size="icon" className="rounded-full bg-white text-black hover:bg-white/90" onClick={() => toggleLike(project.id)}>
+                        <Heart className={`w-5 h-5 ${likedProjects.has(project.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                      </Button>
+                      {project.live && (
+                        <Button className="rounded-full bg-primary text-white" asChild>
+                          <a href={project.live} target="_blank" rel="noreferrer">Visit Site <ExternalLink className="w-4 h-4 ml-2" /></a>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-8">
+                    <div className="flex gap-2 mb-4 flex-wrap">
+                      {project.tags.map(tag => (
+                        <span key={tag} className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
+                    <p className="text-muted-foreground mb-4">{project.description}</p>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-            <Card className="border-border bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-950/20 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
-                <h4 className="text-xl font-semibold mb-4 text-purple-600 dark:text-purple-400">Data & Tools</h4>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "PostgreSQL","MongoDB","MySQL","NumPy","Pandas","scikit‑learn","TensorFlow","Matplotlib","OpenCV"
-                  ].map((s, index) => (
-                    <span key={s} className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
-                      index % 3 === 0 ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white' :
-                      index % 3 === 1 ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white' :
-                      'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white'
-                    }`}>{s}</span>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
-      {/* Certifications Section */}
-      <section id="certifications" className="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 dark:from-yellow-950/20 dark:via-orange-950/20 dark:to-red-950/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-muted-foreground text-center mb-2">Milestones</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-yellow-600 via-orange-600 to-red-600 bg-clip-text text-transparent">Certifications & Achievements</h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="border-border bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 shadow-lg hover:shadow-xl transition-all duration-300"><CardContent className="p-6">
-              <h4 className="font-semibold text-yellow-700 dark:text-yellow-300">IIT Madras Online Degree Foundational Level</h4>
-              <p className="text-sm text-muted-foreground">Dec 2024</p>
-            </CardContent></Card>
-            <Card className="border-border bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 shadow-lg hover:shadow-xl transition-all duration-300"><CardContent className="p-6">
-              <h4 className="font-semibold text-orange-700 dark:text-orange-300">Java Programming: Hands‑on OOP</h4>
-              <p className="text-sm text-muted-foreground">May 2024</p>
-            </CardContent></Card>
-            <Card className="border-border bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 shadow-lg hover:shadow-xl transition-all duration-300"><CardContent className="p-6">
-              <h4 className="font-semibold text-red-700 dark:text-red-300">Solved 300+ problems on LeetCode</h4>
-              <p className="text-sm text-muted-foreground">Algorithmic thinking, problem‑solving</p>
-            </CardContent></Card>
-            <Card className="border-border bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/20 dark:to-purple-950/20 shadow-lg hover:shadow-xl transition-all duration-300"><CardContent className="p-6">
-              <h4 className="font-semibold text-pink-700 dark:text-pink-300">APECT & POLYCET achievements</h4>
-              <p className="text-sm text-muted-foreground">Secured 42nd rank out of 7000+ students; AIR 1137 in POLYCET</p>
-            </CardContent></Card>
-          </div>
-        </div>
-      </section>
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50 dark:from-violet-950/20 dark:via-purple-950/20 dark:to-fuchsia-950/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-muted-foreground text-center mb-2">Connect with me</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Get in touch</h3>
-          <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
-            I'd love to hear from you. Feel free to reach out if you have any questions, comments or just want to connect. I'll always try to get back to you.
-          </p>
+      <section id="contact" className="py-32 bg-secondary/30">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="bg-background rounded-3xl p-8 md:p-12 shadow-2xl border border-border/50 relative overflow-hidden">
 
-          <div className="max-w-2xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-sm">
-              <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800">
-                <p className="text-blue-600 dark:text-blue-400 font-medium">Email</p>
-                <a href="https://mail.google.com/mail/?view=cm&to=lokesh941222@gmail.com" className="font-medium text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">lokesh941222@gmail.com</a>
-              </div>
-              <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800">
-                <p className="text-green-600 dark:text-green-400 font-medium">Phone</p>
-                <a href="tel:+916303090094" className="font-medium text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-colors">+91 63030 90094</a>
-              </div>
-              <div className="p-4 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800">
-                <p className="text-purple-600 dark:text-purple-400 font-medium">Location</p>
-                <p className="font-medium text-purple-700 dark:text-purple-300">Nandyala, Andhra Pradesh, India</p>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+            <div className="text-center mb-12 relative z-10">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">Let's Work Together</h2>
+              <p className="text-muted-foreground">Have a project in mind? I'd love to hear from you.</p>
+            </div>
+
+            <div className="flex justify-center gap-8 mb-12">
+              <a href={`mailto:lokesh941222@gmail.com`} className="flex flex-col items-center gap-2 group">
+                <div className="w-16 h-16 rounded-full bg-blue-100/50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <ExternalLink className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-medium">Email Me</span>
+              </a>
+              <a href="tel:+916303090094" className="flex flex-col items-center gap-2 group">
+                <div className="w-16 h-16 rounded-full bg-green-100/50 dark:bg-green-900/20 text-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Smartphone className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-medium">Call Me</span>
+              </a>
+            </div>
+
+            <div className="text-center border-t border-border pt-8">
+              <p className="text-muted-foreground mb-6">Or follow me on social media</p>
+              <div className="flex justify-center gap-4">
+                {[
+                  { icon: SiGithub, href: LINKS.github },
+                  { icon: SiLinkedin, href: LINKS.linkedin },
+                  { icon: SiInstagram, href: LINKS.instagram },
+                ].map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300"
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                ))}
               </div>
             </div>
-           
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-border bg-muted/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 flex-wrap">
-            <div className="text-center md:text-left">
-              <h4 className="text-2xl font-bold mb-4">POTHA LOKESH</h4>
-              <div className="flex gap-3 flex-wrap justify-center md:justify-start">
-                <Button size="icon" variant="outline" className="rounded-full" data-testid="button-footer-instagram" asChild>
-                  <a href={LINKS.instagram} target="_blank" rel="noreferrer">
-                  <SiInstagram className="w-5 h-5" />
-                  </a>
-                </Button>
-                <Button size="icon" variant="outline" className="rounded-full" data-testid="button-footer-linkedin" asChild>
-                  <a href={LINKS.linkedin} target="_blank" rel="noreferrer">
-                  <SiLinkedin className="w-5 h-5" />
-                  </a>
-                </Button>
-                <Button size="icon" variant="outline" className="rounded-full" data-testid="button-footer-github" asChild>
-                  <a href={LINKS.github} target="_blank" rel="noreferrer">
-                  <SiGithub className="w-5 h-5" />
-                  </a>
-                </Button>
-              </div>
-            </div>
-            
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground">
-                © 2025 Potha Lokesh. All rights reserved.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-6 flex-wrap text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground transition-colors" data-testid="link-terms">
-                Terms of Service
-              </a>
-              <a href="#" className="hover:text-foreground transition-colors" data-testid="link-privacy">
-                Privacy Policy
-              </a>
-              <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">
-                Contact with me
-              </a>
-            </div>
-          </div>
-        </div>
+      <footer className="py-8 border-t border-border/50 text-center text-muted-foreground text-sm">
+        <p>© 2025 Potha Lokesh. Built with Next.js, Tailwind & Framer Motion.</p>
       </footer>
     </div>
   );
