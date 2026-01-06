@@ -127,10 +127,10 @@ export default function Home() {
 
       {/* Background Ambience - INTENSIFIED */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-brand-purple/40 rounded-full blur-[100px] animate-blob mix-blend-screen"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-brand-cyan/40 rounded-full blur-[100px] animate-blob animation-delay-2000 mix-blend-screen"></div>
-        <div className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-brand-pink/40 rounded-full blur-[100px] animate-blob animation-delay-4000 mix-blend-screen"></div>
-        <div className="absolute bottom-[20%] right-[20%] w-[400px] h-[400px] bg-brand-blue/30 rounded-full blur-[100px] animate-blob animation-delay-3000 mix-blend-screen"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[100px] animate-blob mix-blend-screen"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-brand-cyan/10 rounded-full blur-[100px] animate-blob animation-delay-2000 mix-blend-screen"></div>
+        <div className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-brand-pink/10 rounded-full blur-[100px] animate-blob animation-delay-4000 mix-blend-screen"></div>
+        <div className="absolute bottom-[20%] right-[20%] w-[400px] h-[400px] bg-brand-blue/10 rounded-full blur-[100px] animate-blob animation-delay-3000 mix-blend-screen"></div>
       </div>
 
       {/* Navigation */}
@@ -147,12 +147,12 @@ export default function Home() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
-              {['Home', 'About', 'Services', 'Work', 'Contact'].map((item) => (
+              {['Home', 'About', 'Work', 'Services', 'Contact'].map((item) => (
                 <Button
                   key={item}
                   variant="ghost"
                   onClick={() => scrollToSection(item.toLowerCase())}
-                  className="text-sm font-bold bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-pink bg-clip-text text-transparent hover:bg-white/5 transition-all duration-300 rounded-full px-5 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] opacity-90 hover:opacity-100"
+                  className="text-sm font-bold bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-pink bg-clip-text text-transparent hover:bg-white/5 transition-all duration-300 rounded-full px-5 shadow-[0_0_15px_rgba(6,182,212,0.3)] opacity-100"
                 >
                   {item}
                 </Button>
@@ -183,7 +183,7 @@ export default function Home() {
             className="md:hidden overflow-hidden glass border-b border-white/10 animate-accordion-down"
           >
             <div className="flex flex-col p-6 gap-4">
-              {['Home', 'About', 'Services', 'Work', 'Contact'].map((item) => (
+              {['Home', 'About', 'Work', 'Services', 'Contact'].map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
@@ -351,10 +351,71 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Projects Section */}
+      <section id="work" className="py-32 relative">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-pink/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen opacity-30"></div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div
+            className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4"
+          >
+            <div>
+              <h2 className="text-4xl md:text-6xl font-bold mb-4 text-white">Selected <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-purple">Work</span></h2>
+            </div>
+            <Button variant="outline" className="rounded-full border-white/20 hover:bg-white/10 text-white" onClick={() => window.open(LINKS.github, '_blank')}>
+              View GitHub Profile
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project, index) => (
+              <div
+                key={project.id}
+                className="group h-full fade-in-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl h-full flex flex-col hover:border-brand-purple/50 transition-all duration-500 relative ring-1 ring-white/5 hover:ring-brand-purple/50">
+                  {/* Glow Effect on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-brand-purple/0 to-brand-purple/10 opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-black/30 opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
+                      <Button size="icon" variant="ghost" className="rounded-full bg-white text-black hover:bg-white/90 hover:scale-110 transition-all" onClick={() => toggleLike(project.id)}>
+                        <Heart className={`w-5 h-5 ${likedProjects.has(project.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                      </Button>
+                      {project.live && (
+                        <Button className="rounded-full bg-brand-purple text-white hover:bg-brand-purple/90 shadow-lg shadow-brand-purple/30" asChild>
+                          <a href={project.live} target="_blank" rel="noreferrer">Visit Site <ExternalLink className="w-4 h-4 ml-2" /></a>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-8 relative z-10 flex-grow flex flex-col">
+                    <div className="flex gap-2 mb-4 flex-wrap">
+                      {project.tags.map(tag => (
+                        <span key={tag} className="px-3 py-1 bg-white/10 text-brand-cyan rounded-full text-xs font-medium border border-white/5 hover:bg-brand-cyan/20 transition-colors">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 text-brand-purple transition-colors">{project.title}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">{project.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section id="services" className="py-32 relative overflow-hidden">
         {/* Background Splashes */}
-        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-brand-blue/20 rounded-full blur-[120px] -translate-y-1/2 pointer-events-none mix-blend-screen"></div>
+        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-brand-blue/10 rounded-full blur-[120px] -translate-y-1/2 pointer-events-none mix-blend-screen"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div
@@ -370,13 +431,13 @@ export default function Home() {
                 className="hover:-translate-y-2 transition-transform duration-300"
               >
                 <Card className={`h-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-md transition-all duration-300 group hover:border-brand-purple/30`}>
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-10 transition-opacity duration-500 rounded-xl`}></div>
                   <CardContent className="p-8 relative z-10">
                     <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-8 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] text-white group-hover:scale-110 transition-transform duration-300`}>
                       <service.icon className="w-8 h-8" />
                     </div>
-                    <h3 className="text-xl font-bold mb-4 text-white group-hover:text-brand-cyan transition-colors">{service.title}</h3>
-                    <p className="text-gray-400 leading-relaxed text-sm group-hover:text-gray-300">
+                    <h3 className="text-xl font-bold mb-4 text-brand-cyan transition-colors">{service.title}</h3>
+                    <p className="text-gray-300 leading-relaxed text-sm">
                       {service.description}
                     </p>
                   </CardContent>
@@ -407,75 +468,14 @@ export default function Home() {
           >
             {[...Array(2)].map((_, i) => (
               <div key={i} className="flex gap-16 items-center text-5xl font-bold text-white/10 whitespace-nowrap uppercase tracking-wider">
-                <span className="hover:text-brand-cyan hover:opacity-100 transition-all duration-300 cursor-default">React</span>
-                <span className="hover:text-brand-purple hover:opacity-100 transition-all duration-300 cursor-default">Next.js</span>
-                <span className="hover:text-brand-pink hover:opacity-100 transition-all duration-300 cursor-default">TypeScript</span>
-                <span className="hover:text-brand-blue hover:opacity-100 transition-all duration-300 cursor-default">Node.js</span>
-                <span className="hover:text-brand-cyan hover:opacity-100 transition-all duration-300 cursor-default">PostgreSQL</span>
-                <span className="hover:text-brand-purple hover:opacity-100 transition-all duration-300 cursor-default">Tailwind</span>
-                <span className="hover:text-brand-pink hover:opacity-100 transition-all duration-300 cursor-default">Python</span>
-                <span className="hover:text-brand-blue hover:opacity-100 transition-all duration-300 cursor-default">Framer Motion</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="work" className="py-32 relative">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-pink/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen opacity-50"></div>
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div
-            className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4"
-          >
-            <div>
-              <h2 className="text-4xl md:text-6xl font-bold mb-4 text-white">Selected <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-purple">Work</span></h2>
-            </div>
-            <Button variant="outline" className="rounded-full border-white/20 hover:bg-white/10 text-white" onClick={() => window.open(LINKS.github, '_blank')}>
-              View GitHub Profile
-            </Button>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <div
-                key={project.id}
-                className="group h-full fade-in-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl h-full flex flex-col hover:border-brand-purple/50 transition-all duration-500 relative ring-1 ring-white/5 hover:ring-brand-purple/50">
-                  {/* Glow Effect on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-brand-purple/0 to-brand-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4 backdrop-blur-sm">
-                      <Button size="icon" variant="ghost" className="rounded-full bg-white text-black hover:bg-white/90 hover:scale-110 transition-all" onClick={() => toggleLike(project.id)}>
-                        <Heart className={`w-5 h-5 ${likedProjects.has(project.id) ? 'fill-red-500 text-red-500' : ''}`} />
-                      </Button>
-                      {project.live && (
-                        <Button className="rounded-full bg-brand-purple text-white hover:bg-brand-purple/90 shadow-lg shadow-brand-purple/30" asChild>
-                          <a href={project.live} target="_blank" rel="noreferrer">Visit Site <ExternalLink className="w-4 h-4 ml-2" /></a>
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="p-8 relative z-10 flex-grow flex flex-col">
-                    <div className="flex gap-2 mb-4 flex-wrap">
-                      {project.tags.map(tag => (
-                        <span key={tag} className="px-3 py-1 bg-white/10 text-brand-cyan rounded-full text-xs font-medium border border-white/5 hover:bg-brand-cyan/20 transition-colors">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-brand-purple transition-colors">{project.title}</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{project.description}</p>
-                  </div>
-                </div>
+                <span className="text-brand-cyan opacity-100 transition-all duration-300 cursor-default">React</span>
+                <span className="text-brand-purple opacity-100 transition-all duration-300 cursor-default">Next.js</span>
+                <span className="text-brand-pink opacity-100 transition-all duration-300 cursor-default">TypeScript</span>
+                <span className="text-brand-blue opacity-100 transition-all duration-300 cursor-default">Node.js</span>
+                <span className="text-brand-cyan opacity-100 transition-all duration-300 cursor-default">PostgreSQL</span>
+                <span className="text-brand-purple opacity-100 transition-all duration-300 cursor-default">Tailwind</span>
+                <span className="text-brand-pink opacity-100 transition-all duration-300 cursor-default">Python</span>
+                <span className="text-brand-blue opacity-100 transition-all duration-300 cursor-default">Framer Motion</span>
               </div>
             ))}
           </div>
@@ -508,9 +508,9 @@ export default function Home() {
 
               <div className="flex justify-center gap-6">
                 {[
-                  { icon: SiGithub, href: LINKS.github, color: "hover:text-white hover:bg-black" },
-                  { icon: SiLinkedin, href: LINKS.linkedin, color: "hover:text-white hover:bg-[#0077b5]" },
-                  { icon: SiInstagram, href: LINKS.instagram, color: "hover:text-white hover:bg-[#E1306C]" },
+                  { icon: SiGithub, href: LINKS.github, color: "text-white bg-black" },
+                  { icon: SiLinkedin, href: LINKS.linkedin, color: "text-white bg-[#0077b5]" },
+                  { icon: SiInstagram, href: LINKS.instagram, color: "text-white bg-[#E1306C]" },
                 ].map((social, i) => (
                   <a
                     key={i}
