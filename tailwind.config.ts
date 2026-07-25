@@ -52,10 +52,10 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
         brand: {
-          purple: "#7c3aed",
-          cyan: "#06b6d4",
-          pink: "#db2777",
-          blue: "#2563eb",
+          purple: "#10b981",
+          cyan: "#00ff66",
+          pink: "#a3e635",
+          blue: "#052e16",
         }
       },
       keyframes: {
