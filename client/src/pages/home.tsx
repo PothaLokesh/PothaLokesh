@@ -358,7 +358,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Briefcase className="w-4 h-4 text-brand-cyan" />
-                  <span>AI Intern Experience</span>
+                  <span>SDE Intern Experience</span>
                 </div>
               </div>
             </div>
@@ -382,19 +382,6 @@ export default function Home() {
                 />
                 {/* Overlay Vignette */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
-              </div>
-
-              {/* Floating Widget 1 */}
-              <div className="absolute -left-12 top-14 glass p-3.5 rounded-2xl border border-white/15 shadow-xl animate-float-slow scale-90">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-brand-cyan/15 rounded-xl text-brand-cyan border border-brand-cyan/20">
-                    <Trophy className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">APECET Rank</p>
-                    <p className="font-extrabold text-white text-sm">State Rank 42</p>
-                  </div>
-                </div>
               </div>
 
               {/* Floating Widget 2 */}
